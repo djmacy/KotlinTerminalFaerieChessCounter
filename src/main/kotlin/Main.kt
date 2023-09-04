@@ -5,6 +5,7 @@ fun checkForRankII(piece: Int) {
 }
 
 fun main() {
+    //var can be reassigned. val cannot be reassigned to a new value. Similar to Java final I think.
     var run = true
 
     while (run) {
@@ -27,6 +28,7 @@ fun main() {
         //they can have when choosing their pieces
         while (chooseDiff) {
             print("\nWhat difficulty are you playing on: ")
+            //question mark means that readLine() can return null. It is needed or else there is an error in the code
             val difficulty = readLine()?.toUpperCase()
             when (difficulty) {
                 "B" -> {
