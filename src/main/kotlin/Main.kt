@@ -23,6 +23,8 @@ fun main() {
         println("Hello! Welcome to the Faerie Chess Counter\n\nBegin by choosing the difficulty. " +
                 "Insert B for beginner, I for intermediate, and A for advanced")
 
+        //This is where the user will select which difficulty they are playing on. The difficulty will determine how many points
+        //they can have when choosing their pieces
         while (chooseDiff) {
             print("\nWhat difficulty are you playing on: ")
             val difficulty = readLine()?.toUpperCase()
@@ -48,28 +50,30 @@ fun main() {
                 else -> println("Please choose B, I, or A")
             }
         }
-
+        //The user can only select 8 rank I pieces so it will break when the user selects more than 8
         while (rank1 < 8) {
             rank1 = 0
             totalPoints = 0
-
+            //This is how many points the each piece is worth
             val pawnValue = 1
             val peasantValue = 2
             val soldierValue = 3
-
+            //This is the maximum number of pieces available for each piece.
             val pawnLimit = 8
             val peasantLimit = 2
             val soldierLimit = 2
 
             print("How many pawns would you like: ")
+            //if string cannot be converted to int then null, and if null its 0
             pawn = readLine()?.toIntOrNull() ?: 0
 
             if (pawn < 4 || pawn > pawnLimit) {
                 println("Invalid input. Please select between 4 and $pawnLimit pawns.")
                 continue
             }
-
+            //This variable will keep track of how many points the user has until the end of the script
             totalPoints += pawn * pawnValue
+            //rank_1 will determine when we have selected the right number of pieces. 8 is the maximum number of rank_1 pieces
             rank1 += pawn
 
             if (rank1 == 8) {
@@ -120,9 +124,21 @@ fun main() {
 
         val rank1Points = totalPoints
         var doneSelecting = false
-
+        //User can only select 6 rank_2 pieces and will break when the user has selected more than 6
         while (rank2 < 6 && !doneSelecting) {
+
+            var catapult = 0;
+            var courtesan = 0;
+            var chamberlain = 0;
+            var herald = 0;
+            var inquisitor = 0;
+            var lancer = 0;
+            var pontiff = 0;
+            var thief = 0;
+            var tower = 0;
+
             totalPoints = rank1Points
+            //This is the value of each rank_II piece
             val rookValue = 9
             val knightValue = 4
             val bishopValue = 6
@@ -138,12 +154,13 @@ fun main() {
 
             val classicalLimit = 2
             val newLimit = 1
-
+            //This will make sure that we get to six total pieces selected
             rank2 = 0
-
+            //Again similar with the Rank I pieces we have a limited number of pieces that the user can pick. For rank_II its 6
             print("How many rooks would you like: ")
-            val rook = readLine()?.toIntOrNull() ?: 0
 
+            val rook = readLine()?.toIntOrNull() ?: 0
+            //classical_limit is 2 because in the original game of chess you have 2 rooks, 2 bishops, and 2 knights
             if (rook > classicalLimit || rook < 0) {
                 println("Invalid input. Please select between 0 and $classicalLimit rooks.")
                 continue
@@ -179,13 +196,56 @@ fun main() {
                 break
             }
 
-            println("\nFor the rest of these, insert 0 for no and 1 for yes")
+            println("\nFor the rest of these, insert y for yes and n for no")
 
             print("Would you like a catapult: ")
-            val catapult = readLine()?.toIntOrNull() ?: 0
-            checkForRankII(catapult)
-            totalPoints += catapult * catapultValue
-            rank2 += catapult
+            var userInput = readLine()
+
+            when (userInput) {
+                "y" -> {
+                    catapult = 1
+                    checkForRankII(catapult)
+                    totalPoints += catapult * catapultValue
+                    rank2 += catapult
+                }
+                "n" -> {
+
+                }
+                else -> {
+                    rank2 = 0
+                    println("Please insert a valid value: y or n")
+                    println("Remember you can only pick 6 pieces")
+                    continue
+                }
+            }
+
+            if (rank2 == 6) {
+                doneSelecting = true
+                break
+            }
+
+
+
+            print("Would you like a courtesan: ")
+            userInput = readLine()
+
+            when (userInput) {
+                "y" -> {
+                    courtesan = 1
+                    checkForRankII(courtesan)
+                    totalPoints += courtesan * courtesanValue
+                    rank2 += courtesan
+                }
+                "n" -> {
+
+                }
+                else -> {
+                    rank2 = 0
+                    println("Please insert a valid value: y or n")
+                    println("Remember you can only pick 6 pieces")
+                    continue
+                }
+            }
 
             if (rank2 == 6) {
                 doneSelecting = true
@@ -193,21 +253,24 @@ fun main() {
             }
 
             print("Would you like a chamberlain: ")
-            val chamberlain = readLine()?.toIntOrNull() ?: 0
-            checkForRankII(chamberlain)
-            totalPoints += chamberlain * chamberlainValue
-            rank2 += chamberlain
+            userInput = readLine()
 
-            if (rank2 == 6) {
-                doneSelecting = true
-                break
+            when (userInput) {
+                "y" -> {
+                    chamberlain = 1
+                    checkForRankII(chamberlain)
+                    totalPoints += chamberlain * chamberlainValue
+                    rank2 += chamberlain
+                }
+                "n" -> {
+                }
+                else -> {
+                    rank2 = 0
+                    println("Please insert a valid value: y or n")
+                    println("Remember you can only pick 6 pieces")
+                    continue
+                }
             }
-
-            print("Would you like a courtesan: ")
-            val courtesan = readLine()?.toIntOrNull() ?: 0
-            checkForRankII(courtesan)
-            totalPoints += courtesan * courtesanValue
-            rank2 += courtesan
 
             if (rank2 == 6) {
                 doneSelecting = true
@@ -215,21 +278,50 @@ fun main() {
             }
 
             print("Would you like a herald: ")
-            val herald = readLine()?.toIntOrNull() ?: 0
-            checkForRankII(herald)
-            totalPoints += herald * heraldValue
-            rank2 += courtesan
+            userInput = readLine()
+
+            when (userInput) {
+                "y" -> {
+                    herald = 1
+                    checkForRankII(herald)
+                    totalPoints += herald * heraldValue
+                    rank2 += herald
+                }
+                "n" -> {
+
+                }
+                else -> {
+                    rank2 = 0
+                    println("Please insert a valid value: y or n")
+                    println("Remember you can only pick 6 pieces")
+                    continue
+                }
+            }
 
             if (rank2 == 6) {
                 doneSelecting = true
                 break
             }
 
-            print("Would you like an inquisitor: ")
-            val inquisitor = readLine()?.toIntOrNull() ?: 0
-            checkForRankII(inquisitor)
-            totalPoints += inquisitor * inquisitorValue
-            rank2 += inquisitor
+            print("Would you like a inquisitor: ")
+            userInput = readLine()
+
+            when (userInput) {
+                "y" -> {
+                    inquisitor = 1
+                    checkForRankII(inquisitor)
+                    totalPoints += inquisitor * inquisitorValue
+                    rank2 += inquisitor
+                }
+                "n" -> {
+                }
+                else -> {
+                    rank2 = 0
+                    println("Please insert a valid value: y or n")
+                    println("Remember you can only pick 6 pieces")
+                    continue
+                }
+            }
 
             if (rank2 == 6) {
                 doneSelecting = true
@@ -237,10 +329,25 @@ fun main() {
             }
 
             print("Would you like a lancer: ")
-            val lancer = readLine()?.toIntOrNull() ?: 0
-            checkForRankII(lancer)
-            totalPoints += lancer * lancerValue
-            rank2 += lancer
+            userInput = readLine()
+
+            when (userInput) {
+                "y" -> {
+                    lancer = 1
+                    checkForRankII(lancer)
+                    totalPoints += lancer * lancerValue
+                    rank2 += lancer
+                }
+                "n" -> {
+
+                }
+                else -> {
+                    rank2 = 0
+                    println("Please insert a valid value: y or n")
+                    println("Remember you can only pick 6 pieces")
+                    continue
+                }
+            }
 
             if (rank2 == 6) {
                 doneSelecting = true
@@ -248,37 +355,83 @@ fun main() {
             }
 
             print("Would you like a pontiff: ")
-            val pontiff = readLine()?.toIntOrNull() ?: 0
-            checkForRankII(pontiff)
-            totalPoints += pontiff * pontiffValue
-            rank2 += pontiff
+            userInput = readLine()
+
+            when (userInput) {
+                "y" -> {
+                    pontiff = 1
+                    checkForRankII(pontiff)
+                    totalPoints += pontiff * pontiffValue
+                    rank2 += pontiff
+                }
+                "n" -> {
+
+                }
+                else -> {
+                    rank2 = 0
+                    println("Please insert a valid value: y or n")
+                    println("Remember you can only pick 6 pieces")
+                    continue
+                }
+            }
 
             if (rank2 == 6) {
                 doneSelecting = true
                 break
             }
-
             print("Would you like a thief: ")
-            val thief = readLine()?.toIntOrNull() ?: 0
-            checkForRankII(thief)
-            totalPoints += thief * thiefValue
-            rank2 += thief
+            userInput = readLine()
+
+            when (userInput) {
+                "y" -> {
+                    thief = 1
+                    checkForRankII(thief)
+                    totalPoints += thief * thiefValue
+                    rank2 += thief
+                }
+                "n" -> {
+
+                }
+                else -> {
+                    rank2 = 0
+                    println("Please insert a valid value: y or n")
+                    println("Remember you can only pick 6 pieces")
+                    continue
+                }
+            }
 
             if (rank2 == 6) {
                 doneSelecting = true
                 break
             }
-
             print("Would you like a tower: ")
-            val tower = readLine()?.toIntOrNull() ?: 0
-            checkForRankII(tower)
-            totalPoints += tower * towerValue
-            rank2 += tower
+            userInput = readLine()
+
+            when (userInput) {
+                "y" -> {
+                    tower = 1
+                    checkForRankII(tower)
+                    totalPoints += tower * towerValue
+                    rank2 += tower
+                }
+                "n" -> {
+
+                }
+                else -> {
+                    rank2 = 0
+                    println("Please insert a valid value: y or n")
+                    println("Remember you can only pick 6 pieces")
+                    continue
+                }
+            }
 
             if (rank2 == 6) {
                 doneSelecting = true
                 break
             }
+
+            println("You selected " + rank2 + " pieces. The count will now restart. \n" +
+                    "Be sure to select 6 pieces.")
         }
 
         println("You have selected all of your Rank II pieces")
@@ -290,25 +443,32 @@ fun main() {
         while (rank3 < 2) {
             rank3 = 0
             totalPoints = rankIIIPoints
+
+            var queen = 0;
+            var king = 0;
+            var jester = 0;
+            var regent = 0;
+
             val queenValue = 12
             val kingValue = 0
             val jesterValue = 12
             val regentValue = 15
 
-            println("Enter 0 for no and 1 for yes")
+            println("Enter y for yes and n for no")
 
             print("Would you like a queen: ")
-            val queen = readLine()?.toIntOrNull() ?: 0
+            var userInput = readLine()
 
-            if (queen > 1 || queen < 0) {
-                println("Please insert 0 or 1")
+            if (userInput != "y" && userInput != "n") {
+                println("Please insert y or n")
                 continue
-            } else if (queen == 1) {
+            } else if (userInput == "y") {
+                queen = 1
                 totalPoints += queen * queenValue
                 rank3 += queen
             } else {
                 println("Since you did not select a queen, you automatically get a jester")
-                val jester = 1
+                jester = 1
                 totalPoints += jester * jesterValue
             }
 
@@ -321,18 +481,19 @@ fun main() {
             }
 
             print("Would you like a king: ")
-            val king = readLine()?.toIntOrNull() ?: 0
+            userInput = readLine()
 
-            if (king > 1 || king < 0) {
-                println("Please insert 0 or 1")
+            if (userInput != "y" && userInput != "n") {
+                println("Please insert y or no")
                 continue
-            } else if (king == 1) {
+            } else if (userInput == "y") {
+                king = 1
                 totalPoints += king * kingValue
                 rank3 += king
                 break
             } else {
                 println("Since you did not select a king, you automatically get a regent")
-                val regent = 1
+                regent = 1
                 totalPoints += regent * regentValue
                 break
             }
