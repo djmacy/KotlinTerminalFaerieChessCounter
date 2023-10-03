@@ -32,7 +32,7 @@ enum class PieceValue(val value: Int) {
 
 class FaerieChessCounter {
     //This allows me to use something similar to the input function in python and insert a statement
-    private fun checkForValidInput(statement: String, min: Int, max: Int): Int {
+    private fun checkForValidClassicalInput(statement: String, min: Int, max: Int): Int {
         while (true) {
             print(statement)
             //var can be reassigned. val cannot be reassigned to a new value. Similar to Java final I think.
@@ -51,17 +51,34 @@ class FaerieChessCounter {
         }
     }
 
-    private fun calculateRankIPoints(maxPoints: Int): Int {
+    private fun checkForValidFaerieInput(statement: String): Int {
+        while(true) {
+            print(statement)
+            val userInput = readLine()?.toLowerCase()
+            when (userInput) {
+                "y" -> {
+                    return 1
+                }
+                "n" -> {
+                    return 0
+                }
+                else -> {
+                    println("Please insert y or n")
+                }
+            }
+        }
+    }
+
+    private fun calculateRankIPoints(): Int {
         var rank1 = 0
         var totalPoints = 0
         //This is the maximum number of pieces available for each piece.
-        val pawnLimit = 8
-        val peasantLimit = 2
-        val soldierLimit = 2
         val pawnMin = 4
+        val pawnLimit = 8
+        val soldierLimit = 2
         //The user can only select 8 rank I pieces so it will break when the user selects more than 8
         while (rank1 < 8) {
-            val pawn = checkForValidInput("How many pawns would you like: ", pawnMin, pawnLimit)
+            val pawn = checkForValidClassicalInput("How many pawns would you like: ", pawnMin, pawnLimit)
             var peasant = 0
             var soldier = 0
             //This variable will keep track of how many points the user has until the end of the script
@@ -82,7 +99,7 @@ class FaerieChessCounter {
                 val peasantMin = maxOf(0, 8 - (rank1 + soldierLimit))
                 val peasantLimit = minOf(2, 8 - rank1)
                 println("You can select from $peasantMin to $peasantLimit peasants")
-                peasant = checkForValidInput("How many peasants would you like: ", peasantMin, peasantLimit)
+                peasant = checkForValidClassicalInput("How many peasants would you like: ", peasantMin, peasantLimit)
                 totalPoints += peasant * PieceValue.PEASANT.value
                 rank1 += peasant
                 if (rank1 == 8) {
@@ -112,161 +129,87 @@ class FaerieChessCounter {
         val classicalLimit = 2
         var rank2 = 0
         while (rank2 < 6) {
-            //This will make sure that we get to six total pieces selected
+            //This will make sure that we get to six total pieces selected if loop is restarted
             rank2 = 0
             //restart the total points calculated to what the total was after rank_1 calculation if loop gets reset to
             var rank2StartingPoints = totalPoints
 
-            var rook = checkForValidInput("How many rooks would you like: ", classicalMin, classicalLimit)
+            val rook = checkForValidClassicalInput("How many rooks would you like: ", classicalMin, classicalLimit)
             rank2StartingPoints += rook * PieceValue.ROOK.value
             rank2 += rook
 
-            var knight = checkForValidInput("How many knights would you like: ", classicalMin, classicalLimit)
+            val knight = checkForValidClassicalInput("How many knights would you like: ", classicalMin, classicalLimit)
             rank2StartingPoints += knight * PieceValue.KNIGHT.value
             rank2 += knight
 
-            var bishop = checkForValidInput("How many bishops would you like: ", classicalMin, classicalLimit)
+            val bishop = checkForValidClassicalInput("How many bishops would you like: ", classicalMin, classicalLimit)
             rank2StartingPoints += bishop * PieceValue.BISHOP.value
             rank2 += bishop
-
             if (rank2 >= 6) {
                 return rank2StartingPoints
             }
+
             //There is only one of each piece that you can select from after you are done selecting from rooks, knights, and bishops.
             println("\nFor the rest of these insert 'y' for yes and 'n' for no")
-            println("Would you like a catapult?")
-            val catapult = readLine()?.toLowerCase()
-            if (catapult == "y") {
-                val catapult = 1
-                rank2StartingPoints += catapult * PieceValue.CATAPULT.value
-                rank2 += catapult
-                //If the user provides bad input we will restart the entire loop
-            } else if (catapult != "n" && catapult != "y") {
-                rank2 = 0
-                println("Please insert a valid value: 'y' or 'n'")
-                continue
-            }
-
+            val catapult = checkForValidFaerieInput("Would you like a catapult?")
+            rank2StartingPoints += catapult * PieceValue.CATAPULT.value
+            rank2 += catapult
             if (rank2 >= 6) {
                 return rank2StartingPoints
             }
-            println("Would you like a chamberlain?")
-            val chamberlain = readLine()?.toLowerCase()
-            if (chamberlain == "y") {
-                val chamberlain = 1
-                rank2StartingPoints += chamberlain * PieceValue.CHAMBERLAIN.value
-                rank2 += chamberlain
-            } else if (chamberlain != "n" && chamberlain != "y") {
-                rank2 = 0
-                println("Please insert a valid value: 'y' or 'n'")
-                continue
-            }
 
+            val chamberlain = checkForValidFaerieInput("Would you like a chamberlain?")
+            rank2StartingPoints += chamberlain * PieceValue.CHAMBERLAIN.value
+            rank2 += chamberlain
             if (rank2 >= 6) {
                 return rank2StartingPoints
             }
-            println("Would you like a courtesan?")
-            val courtesan = readLine()?.toLowerCase()
-            if (courtesan == "y") {
-                val courtesan = 1
-                rank2StartingPoints += courtesan * PieceValue.COURTESAN.value
-                rank2 += courtesan
-            } else if (courtesan != "n" && courtesan != "y") {
-                rank2 = 0
-                println("Please insert a valid value: 'y' or 'n'")
-                continue
-            }
 
+            val courestan = checkForValidFaerieInput("Would you like a courtesan?")
+            rank2StartingPoints += courestan * PieceValue.COURTESAN.value
+            rank2 += courestan
             if (rank2 >= 6) {
                 return rank2StartingPoints
             }
-            println("Would you like a herald?")
-            val herald = readLine()?.toLowerCase()
-            if (herald == "y") {
-                val herald = 1
-                rank2StartingPoints += herald * PieceValue.HERALD.value
-                rank2 += herald
-            } else if (herald != "n" && herald != "y") {
-                rank2 = 0
-                println("Please insert a valid value: 'y' or 'n'")
-                continue
-            }
 
+            val herald = checkForValidFaerieInput("Would you like a herald?")
+            rank2StartingPoints += herald * PieceValue.HERALD.value
+            rank2 += herald
             if (rank2 >= 6) {
                 return rank2StartingPoints
             }
-            println("Would you like an inquisitor?")
-            val inquisitor = readLine()?.toLowerCase()
-            if (inquisitor == "y") {
-                val inquisitor = 1
-                rank2StartingPoints += inquisitor * PieceValue.INQUISITOR.value
-                rank2 += inquisitor
-            } else if (inquisitor != "n" && inquisitor != "y") {
-                rank2 = 0
-                println("Please insert a valid value: 'y' or 'n'")
-                continue
-            }
 
+            val inquisitor = checkForValidFaerieInput("Would you like a inquisitor?")
+            rank2StartingPoints += inquisitor * PieceValue.INQUISITOR.value
+            rank2 += chamberlain
             if (rank2 >= 6) {
                 return rank2StartingPoints
             }
-            println("Would you like a lancer?")
-            val lancer = readLine()?.toLowerCase()
-            if (lancer == "y") {
-                val lancer = 1
-                rank2StartingPoints += lancer * PieceValue.LANCER.value
-                rank2 += lancer
-            } else if (lancer != "n" && lancer != "y") {
-                rank2 = 0
-                println("Please insert a valid value: 'y' or 'n'")
-                continue
-            }
 
+            val lancer = checkForValidFaerieInput("Would you like a lancer?")
+            rank2StartingPoints += lancer * PieceValue.LANCER.value
+            rank2 += lancer
             if (rank2 >= 6) {
                 return rank2StartingPoints
             }
-            println("Would you like a pontiff?")
-            val pontiff = readLine()?.toLowerCase()
-            if (pontiff == "y") {
-                val pontiff = 1
-                rank2StartingPoints += pontiff * PieceValue.PONTIFF.value
-                rank2 += pontiff
-            } else if (pontiff != "n" && pontiff != "y") {
-                rank2 = 0
-                println("Please insert a valid value: 'y' or 'n'")
-                continue
-            }
 
+            val pontiff = checkForValidFaerieInput("Would you like a pontiff?")
+            rank2StartingPoints += pontiff * PieceValue.PONTIFF.value
+            rank2 += pontiff
             if (rank2 >= 6) {
                 return rank2StartingPoints
             }
-            println("Would you like a thief?")
-            val thief = readLine()?.toLowerCase()
-            if (thief == "y") {
-                val thief = 1
-                rank2StartingPoints += thief * PieceValue.THIEF.value
-                rank2 += thief
-            } else if (thief != "n" && thief != "y") {
-                rank2 = 0
-                println("Please insert a valid value: 'y' or 'n'")
-                continue
-            }
 
+            val thief = checkForValidFaerieInput("Would you like a thief?")
+            rank2StartingPoints += thief * PieceValue.THIEF.value
+            rank2 += thief
             if (rank2 >= 6) {
                 return rank2StartingPoints
             }
-            println("Would you like a tower?")
-            val tower = readLine()?.toLowerCase()
-            if (tower == "y") {
-                val tower = 1
-                rank2StartingPoints += tower * PieceValue.TOWER.value
-                rank2 += tower
-            } else if (tower != "n" && tower != "y") {
-                rank2 = 0
-                println("Please insert a valid value: 'y' or 'n'")
-                continue
-            }
 
+            val tower = checkForValidFaerieInput("Would you like a tower?")
+            rank2StartingPoints += tower * PieceValue.TOWER.value
+            rank2 += tower
             if (rank2 >= 6) {
                 return rank2StartingPoints
             } else {
@@ -274,7 +217,6 @@ class FaerieChessCounter {
                 continue
             }
         }
-
         return totalPoints
     }
 
@@ -369,7 +311,7 @@ class FaerieChessCounter {
     fun main() {
         while (true) {
             val maxPoints = chooseDifficulty()
-            var totalPoints = calculateRankIPoints(maxPoints)
+            var totalPoints = calculateRankIPoints()
 
             println(
                 "Total points for Rank I pieces: $totalPoints. You have ${maxPoints - totalPoints} " +
