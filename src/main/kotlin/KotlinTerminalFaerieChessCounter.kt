@@ -4,8 +4,7 @@
 // this was created so people do not need to count up the points themselves but rather have the application do it and let them know if they have points to spare.
 
 fun main() {
-    val chessCounter = FaerieChessCounter()
-    chessCounter.main()
+    FaerieChessCounter().faerieChessCounter()
 }
 
 enum class PieceValue(val value: Int) {
@@ -31,7 +30,16 @@ enum class PieceValue(val value: Int) {
 }
 
 class FaerieChessCounter {
-    //This allows me to use something similar to the input function in python and insert a statement
+
+    /**
+     * This method allows for a chess pieces that can be selected more once to have its value assigned. It will also
+     * check to see if the user has given a valid input, which is an integer from the min to max value provided. It then
+     * returns the number of pieces selected per piece.
+     * @param statement - Statement that is asked to the user asking if they want that piece and how many
+     * @param min - Min is the minimum number of pieces that may be selected for that piece
+     * @param max - Max is the maximum number of pieces that may be selected for that piece
+     * @return the number of selected pieces
+     */
     private fun checkForValidClassicalInput(statement: String, min: Int, max: Int): Int {
         while (true) {
             print(statement)
@@ -51,11 +59,17 @@ class FaerieChessCounter {
         }
     }
 
+    /**
+     * This method allows for a chess pieces that can be selected none or once to have its value assigned by the user.
+     * It will also check to see if the user has given a valid input, which is y for yes and n for no. It will then
+     * return the number of selected pieces 0 or 1.
+     * @param statement - Statement that is asked to the user asking if they want that piece
+     * @return the number of selected pieces
+     */
     private fun checkForValidFaerieInput(statement: String): Int {
         while(true) {
             print(statement)
-            val userInput = readLine()?.toLowerCase()
-            when (userInput) {
+            when (readLine()?.lowercase()) {
                 "y" -> {
                     return 1
                 }
@@ -69,6 +83,9 @@ class FaerieChessCounter {
         }
     }
 
+    /**
+     * This method will calculate how many points the user has after selecting all of their rank I pieces.
+     */
     private fun calculateRankIPoints(): Int {
         var rank1 = 0
         var totalPoints = 0
@@ -77,7 +94,7 @@ class FaerieChessCounter {
         val pawnLimit = 8
         val soldierLimit = 2
         //The user can only select 8 rank I pieces so it will break when the user selects more than 8
-        while (rank1 < 8) {
+        while (true) {
             val pawn = checkForValidClassicalInput("How many pawns would you like: ", pawnMin, pawnLimit)
             var peasant = 0
             var soldier = 0
@@ -122,15 +139,17 @@ class FaerieChessCounter {
         return totalPoints
     }
 
-    //User can only select 6 rank_2 pieces and will break when the user has selected more than 6
-    private fun calculateRankII(totalPoints: Int, maxPoints: Int): Int {
+    /**
+     * This method will calculate how many points the user has after selecting all of their rank II pieces.
+     * @param totalPoints - Total Points from selecting the rank I pieces
+     */
+    private fun calculateRankII(totalPoints: Int): Int {
         //classical_limit is 2 because in the original game of chess you have 2 rooks, 2 bishops, and 2 knights
         val classicalMin = 0
         val classicalLimit = 2
-        var rank2 = 0
-        while (rank2 < 6) {
+        while (true) {
             //This will make sure that we get to six total pieces selected if loop is restarted
-            rank2 = 0
+            var rank2 = 0
             //restart the total points calculated to what the total was after rank_1 calculation if loop gets reset to
             var rank2StartingPoints = totalPoints
 
@@ -217,17 +236,18 @@ class FaerieChessCounter {
                 continue
             }
         }
-        return totalPoints
     }
 
+    /**
+     * This method will calculate how many points the user has after selecting all of their rank III pieces.
+     */
     private fun calculateRankIII(totalPoints: Int, maxPoints: Int): Int {
         var rank3 = 0
         var currentPoints = totalPoints
         //Can only select 2 rank_III pieces
-        while (rank3 < 2) {
+        while (true) {
             println("\nFor these insert 'y' for yes and 'n' for no\nWould you like a queen?")
-
-            val queen = readLine()?.toLowerCase()
+            val queen = readLine()?.lowercase()
             if (queen == "y") {
                 val queen = 1
                 currentPoints += queen * PieceValue.QUEEN.value
@@ -248,7 +268,7 @@ class FaerieChessCounter {
                 break
             }
             println("Would you like a King?")
-            val king = readLine()?.toLowerCase()
+            val king = readLine()?.lowercase()
             if (king == "y") {
                 val king = 1
                 currentPoints += king * PieceValue.KING.value
@@ -266,7 +286,10 @@ class FaerieChessCounter {
         return currentPoints
     }
 
-    //Pair in kotlin allows me to store and return two variables of the same or different type
+    /**
+     * This method will allow the user to pick their difficulty which sets the points they can use to select their
+     * pieces. Beginner allows the user to have 65 pts, Intermediate 70, and Advanced 75.
+     */
     private fun chooseDifficulty(): Int {
         var chooseDiff = true
 
@@ -279,7 +302,7 @@ class FaerieChessCounter {
         //This is where the user will select which difficulty they are playing on. The difficulty will determine how many points
         //they can have when choosing their pieces
         while (chooseDiff) {
-            val difficulty = readLine()?.toUpperCase()
+            val difficulty = readLine()?.uppercase()
 
             when (difficulty) {
                 "B" -> {
@@ -308,7 +331,12 @@ class FaerieChessCounter {
 
         return maxPoints
     }
-    fun main() {
+
+    /**
+     * This method runs the logic of the entire program. It starts by asking the difficulty and assigning the number of
+     * points they have to work with. After that it will run the methods that ask the user what pieces they want.
+     */
+    fun faerieChessCounter() {
         while (true) {
             val maxPoints = chooseDifficulty()
             var totalPoints = calculateRankIPoints()
@@ -318,7 +346,7 @@ class FaerieChessCounter {
                         "points left!\nNow let's pick your Rank II pieces. You can only select 6 Rank II pieces."
             )
 
-            totalPoints = calculateRankII(totalPoints, maxPoints)
+            totalPoints = calculateRankII(totalPoints)
             println("You have selected all of your Rank II pieces")
             println(
                 "Total points for Rank II & Rank I pieces: $totalPoints. You have ${maxPoints - totalPoints} " +
@@ -329,7 +357,7 @@ class FaerieChessCounter {
             println("You have selected all of your Rank III pieces")
             println("Total points for Rank III pieces: $totalPoints. You have ${maxPoints - totalPoints} points left!")
             println("Would you like to go again?")
-            val redo = readLine()?.toLowerCase()
+            val redo = readLine()?.lowercase()
             if (redo != "y") {
                 println("Thank you. See you next time!")
                 break
