@@ -39,6 +39,7 @@ class FaerieChessCounter {
             val userInput = readLine()
             if (userInput != null && userInput.matches(Regex("\\d+"))) {
                 val intValue = userInput.toInt()
+                //.. will help check that intValue is: min <= intValue <= max
                 if (intValue in min..max) {
                     return intValue
                 } else {
@@ -50,7 +51,7 @@ class FaerieChessCounter {
         }
     }
 
-    private fun calculateRankIPoints(minPoints: Int, maxPoints: Int): Int {
+    private fun calculateRankIPoints(maxPoints: Int): Int {
         var rank1 = 0
         var totalPoints = 0
         //This is the maximum number of pieces available for each piece.
@@ -324,7 +325,7 @@ class FaerieChessCounter {
     }
 
     //Pair in kotlin allows me to store and return two variables of the same or different type
-    private fun chooseDifficulty(): Pair<Int, Int> {
+    private fun chooseDifficulty(): Int {
         var chooseDiff = true
 
         println(
@@ -332,7 +333,6 @@ class FaerieChessCounter {
                     "Insert B for beginner, I for intermediate, and A for advanced"
         )
 
-        var minPoints = 0
         var maxPoints = 0
         //This is where the user will select which difficulty they are playing on. The difficulty will determine how many points
         //they can have when choosing their pieces
@@ -342,21 +342,18 @@ class FaerieChessCounter {
             when (difficulty) {
                 "B" -> {
                     println("Great! You will play with 60 - 65 points")
-                    minPoints = 60
                     maxPoints = 65
                     chooseDiff = false
                 }
 
                 "I" -> {
                     println("Great! You will play with 65 - 70 points")
-                    minPoints = 65
                     maxPoints = 70
                     chooseDiff = false
                 }
 
                 "A" -> {
                     println("Great! You will play with 70 - 75 points")
-                    minPoints = 70
                     maxPoints = 75
                     chooseDiff = false
                 }
@@ -367,12 +364,12 @@ class FaerieChessCounter {
             }
         }
 
-        return Pair(minPoints, maxPoints)
+        return maxPoints
     }
     fun main() {
         while (true) {
-            val (minPoints, maxPoints) = chooseDifficulty()
-            var totalPoints = calculateRankIPoints(minPoints, maxPoints)
+            val maxPoints = chooseDifficulty()
+            var totalPoints = calculateRankIPoints(maxPoints)
 
             println(
                 "Total points for Rank I pieces: $totalPoints. You have ${maxPoints - totalPoints} " +
