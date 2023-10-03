@@ -32,13 +32,18 @@ enum class PieceValue(val value: Int) {
 
 class FaerieChessCounter {
     //This allows me to use something similar to the input function in python and insert a statement
-    private fun checkForValidInput(statement: String): Int {
+    private fun checkForValidInput(statement: String, min: Int, max: Int): Int {
         while (true) {
             print(statement)
             //var can be reassigned. val cannot be reassigned to a new value. Similar to Java final I think.
             val userInput = readLine()
             if (userInput != null && userInput.matches(Regex("\\d+"))) {
-                return userInput.toInt()
+                val intValue = userInput.toInt()
+                if (intValue in min..max) {
+                    return intValue
+                } else {
+                    println("Invalid input. Please enter a number between $min and $max.")
+                }
             } else {
                 println("Invalid input. Please insert the correct value.")
             }
@@ -55,14 +60,9 @@ class FaerieChessCounter {
         val pawnMin = 4
         //The user can only select 8 rank I pieces so it will break when the user selects more than 8
         while (rank1 < 8) {
-            val pawn = checkForValidInput("How many pawns would you like: ")
+            val pawn = checkForValidInput("How many pawns would you like: ", pawnMin, pawnLimit)
             var peasant = 0
             var soldier = 0
-
-            if (pawn < pawnMin || pawn > pawnLimit) {
-                println("Invalid input. Please select between $pawnMin and $pawnLimit pawns.")
-                continue
-            }
             //This variable will keep track of how many points the user has until the end of the script
             totalPoints += pawn * PieceValue.PAWN.value
             //rank_1 will determine when we have selected the right number of pieces. 8 is the maximum number of rank_1 pieces
@@ -80,19 +80,10 @@ class FaerieChessCounter {
             } else if (rank1 > 4) {
                 val peasantMin = maxOf(0, 8 - (rank1 + soldierLimit))
                 val peasantLimit = minOf(2, 8 - rank1)
-
                 println("You can select from $peasantMin to $peasantLimit peasants")
-                peasant = checkForValidInput("How many peasants would you like: ")
-
-                if (peasant < peasantMin || peasant > peasantLimit) {
-                    println("Invalid input. Please select between $peasantMin and $peasantLimit peasants.")
-                    rank1 = 0
-                    continue
-                }
-
+                peasant = checkForValidInput("How many peasants would you like: ", peasantMin, peasantLimit)
                 totalPoints += peasant * PieceValue.PEASANT.value
                 rank1 += peasant
-
                 if (rank1 == 8) {
                     println("You have picked the maximum number of pieces")
                     break
@@ -116,6 +107,7 @@ class FaerieChessCounter {
     //User can only select 6 rank_2 pieces and will break when the user has selected more than 6
     private fun calculateRankII(totalPoints: Int, maxPoints: Int): Int {
         //classical_limit is 2 because in the original game of chess you have 2 rooks, 2 bishops, and 2 knights
+        val classicalMin = 0
         val classicalLimit = 2
         var rank2 = 0
         while (rank2 < 6) {
@@ -124,30 +116,15 @@ class FaerieChessCounter {
             //restart the total points calculated to what the total was after rank_1 calculation if loop gets reset to
             var rank2StartingPoints = totalPoints
 
-            var rook = checkForValidInput("How many rooks would you like: ")
-            if (rook > classicalLimit || rook < 0) {
-                rook = 0
-                println("Invalid input. Please select between 0 and $classicalLimit rooks.")
-                continue
-            }
+            var rook = checkForValidInput("How many rooks would you like: ", classicalMin, classicalLimit)
             rank2StartingPoints += rook * PieceValue.ROOK.value
             rank2 += rook
 
-            var knight = checkForValidInput("How many knights would you like: ")
-            if (knight > classicalLimit || knight < 0) {
-                knight = 0
-                println("Invalid input. Please select between 0 and $classicalLimit knights.")
-                continue
-            }
+            var knight = checkForValidInput("How many knights would you like: ", classicalMin, classicalLimit)
             rank2StartingPoints += knight * PieceValue.KNIGHT.value
             rank2 += knight
 
-            var bishop = checkForValidInput("How many bishops would you like: ")
-            if (bishop > classicalLimit || bishop < 0) {
-                bishop = 0
-                println("Invalid input. Please select between 0 and $classicalLimit bishops.")
-                continue
-            }
+            var bishop = checkForValidInput("How many bishops would you like: ", classicalMin, classicalLimit)
             rank2StartingPoints += bishop * PieceValue.BISHOP.value
             rank2 += bishop
 
@@ -393,9 +370,7 @@ class FaerieChessCounter {
         return Pair(minPoints, maxPoints)
     }
     fun main() {
-        var run = true
-
-        while (run) {
+        while (true) {
             val (minPoints, maxPoints) = chooseDifficulty()
             var totalPoints = calculateRankIPoints(minPoints, maxPoints)
 
@@ -419,8 +394,6 @@ class FaerieChessCounter {
             if (redo != "y") {
                 println("Thank you. See you next time!")
                 break
-            } else if (redo == "y") {
-                run = true
             }
         }
     }
