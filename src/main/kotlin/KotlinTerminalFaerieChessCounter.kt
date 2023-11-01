@@ -91,13 +91,13 @@ class FaerieChessCounter {
         //The user can only select 8 rank I pieces so it will break when the user selects more than 8
         while (true) {
             val pawn = checkForValidClassicalInput("How many pawns would you like: ", Pieces.PAWN.minPieces, Pieces.PAWN.maxPieces)
-            var peasant = 0
-            var soldier = 0
-            //This variable will keep track of how many points the user has until the end of the script
-            totalPoints += pawn * Pieces.PAWN.value
             //rank_1 will determine when we have selected the right number of pieces. 8 is the maximum number of rank_1 pieces
             rank1 += pawn
+            //This variable will keep track of how many points the user has until the end of the script
+            totalPoints += pawn * Pieces.PAWN.value
 
+            var peasant = 0
+            var soldier = 0
             if (rank1 == 8) {
                 println("You have selected the maximum number of Rank I pieces")
                 break
@@ -145,36 +145,33 @@ class FaerieChessCounter {
             Pieces.CHAMBERLAIN, Pieces.COURTESAN, Pieces.HERALD,
             Pieces.INQUISITOR, Pieces.LANCER, Pieces.PONTIFF, Pieces.THIEF,
             Pieces.TOWER
-        );
+        )
         while (true) {
             var rank2 = 0
             var rank2StartingPoints = totalPoints
 
             for (piece in rankIIPieces) {
+                var selectedPieces: Int
                 if (piece.maxPieces == 2) {
-                    val selectedPieces = checkForValidClassicalInput(
+                    selectedPieces = checkForValidClassicalInput(
                         "How many $piece" + "s would you like: ", piece.minPieces, piece.maxPieces
                     )
-                    rank2StartingPoints += selectedPieces * piece.value
-                    rank2 += selectedPieces
-                    if (rank2 == 6) {
-                        break
-                    }
                 } else if (piece.maxPieces == 1) {
                     println("\nFor the rest of these insert 'y' for yes and 'n' for no")
-                    val selectedPiece = checkForValidFaerieInput("Would you like a ${piece.name}?")
-                    rank2StartingPoints += selectedPiece * (piece.value)
-                    rank2 += selectedPiece
-                    if (rank2 == 6) {
-                        break
-                    }
+                    selectedPieces = checkForValidFaerieInput("Would you like a ${piece.name}?")
+                } else {
+                    selectedPieces = 0
+                }
+                rank2StartingPoints += selectedPieces * (piece.value)
+                rank2 += selectedPieces
+                if (rank2 == 6) {
+                    break
                 }
             }
             if (rank2 == 6) {
                 return rank2StartingPoints
             } else {
                 println("You only selected $rank2 pieces. Be sure to select 6 rank II pieces. The count will now reset!")
-                continue
             }
         }
     }
